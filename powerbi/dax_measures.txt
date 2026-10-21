@@ -1,0 +1,39 @@
+Power BI DAX measures
+======================
+
+Create a table called Sales by importing data/sales_data.csv. Ensure OrderDate is Date,
+Revenue/Cost/Profit/UnitPrice are Decimal Number, Quantity is Whole Number and DiscountPct
+is Decimal Number.
+
+Total Revenue = SUM(Sales[Revenue])
+
+Total Profit = SUM(Sales[Profit])
+
+Total Orders = DISTINCTCOUNT(Sales[OrderID])
+
+Units Sold = SUM(Sales[Quantity])
+
+Profit Margin % = DIVIDE([Total Profit], [Total Revenue], 0)
+
+Average Order Value = DIVIDE([Total Revenue], [Total Orders], 0)
+
+Average Discount % = AVERAGE(Sales[DiscountPct])
+
+Revenue LY =
+CALCULATE([Total Revenue], SAMEPERIODLASTYEAR('Calendar'[Date]))
+
+Revenue YoY % =
+DIVIDE([Total Revenue] - [Revenue LY], [Revenue LY], 0)
+
+Calendar table (Modeling > New table):
+Calendar = CALENDAR(MIN(Sales[OrderDate]), MAX(Sales[OrderDate]))
+
+Then add calculated columns to Calendar:
+Year = YEAR('Calendar'[Date])
+Month = FORMAT('Calendar'[Date], "MMM")
+Month Number = MONTH('Calendar'[Date])
+Year-Month = FORMAT('Calendar'[Date], "YYYY-MM")
+
+Sort Calendar[Month] by Calendar[Month Number], then mark Calendar as a date table
+(Modeling > Mark as date table). Create a one-to-many relationship from Calendar[Date]
+to Sales[OrderDate].
